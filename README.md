@@ -1,17 +1,16 @@
 # <span style="color:orange;">Hello! :wave: Welcome!</span>
 
 <p align="center">
-  <img src="https://github.com/anacapamu/little-help/blob/main/FullLogo.jpg" alt="FullLogo" width="400">
+  <img src="./public/FullLogo.jpg" alt="FullLogo" width="400">
 </p>
 
-## 🧚🏻 About us 
+## 🧚🏻 About us
 **Little Help** is an AI-powered chat scheduler that helps small business owners enhance their customer service and manage their appointments more efficiently. We help you follow up with your customers, handle reservation and cancellations, rescheduling, send out reminders through intuitive chat messages.
 
-
-## 🔖 Features 
+## 🔖 Features
 **Little Help** integrates with your WeChat, Whatsapp, iMessages and connects with Google Calendar, iCalendar, etc.
 
-### Automated Chatting 
+### Automated Chatting
 Engages with your customers directly via chat to handle appointment details, questions, and more.
 
 ### Proactive Follow-ups
@@ -23,8 +22,6 @@ Facilitates easy cancellations or changes to appointments through chat, keeping 
 ### Customizable Interactions
 Tailor chat messages to fit your business tone and customer engagement style.
 
-
-## :coffee: Get in touch 
+## :coffee: Get in touch
 For more information about **Little Help** or to schedule a demo, DM 💬💬 us!
 We're excited to see how **Little Help** can make a big difference in your business!
-

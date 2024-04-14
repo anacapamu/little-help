@@ -1,7 +1,5 @@
 "use client";
 
-import type { NextPage } from 'next';
-import MessageList from './components/message-list';
 import { useEffect, useState } from 'react';
 
 interface Message {
@@ -41,18 +39,4 @@ const useMessages = () => {
     return { messages, isLoading, isError };
 }
 
-const Home: NextPage = () => {
-    const { messages, isLoading, isError } = useMessages();
-
-    if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>Error loading messages.</p>;
-
-    return (
-        <div>
-            <h1>Messages</h1>
-            <MessageList messages={messages} />
-        </div>
-    );
-}
-
-export default Home;
+export default useMessages;
