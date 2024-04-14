@@ -1,71 +1,30 @@
-This is a [LlamaIndex](https://www.llamaindex.ai/) project using [Next.js](https://nextjs.org/) bootstrapped with [`create-llama`](https://github.com/run-llama/LlamaIndexTS/tree/main/packages/create-llama).
+# <span style="color:orange;">Hello! :wave: Welcome!</span>
 
-## Getting Started
+<p align="center">
+  <img src="https://github.com/anacapamu/little-help/blob/main/FullLogo.jpg" alt="FullLogo" width="400">
+</p>
 
-First, install the dependencies:
+## 🧚🏻 About us 
+**Little Help** is an AI-powered chat scheduler that helps small business owners enhance their customer service and manage their appointments more efficiently. We help you follow up with your customers, handle reservation and cancellations, rescheduling, send out reminders through intuitive chat messages.
 
-```
-npm install
-```
 
-Second, generate the embeddings of the documents in the `./data` directory (if this folder exists - otherwise, skip this step):
+## 🔖 Features 
+**Little Help** integrates with your WeChat, Whatsapp, iMessages and connects with Google Calendar, iCalendar, etc.
 
-```
-npm run generate
-```
+### Automated Chatting 
+Engages with your customers directly via chat to handle appointment details, questions, and more.
 
-Third, run the development server:
+### Proactive Follow-ups
+Automatically response or send chat messages to remind clients about upcoming appointments or follow up on pending actions.
 
-```
-npm run dev
-```
+### Cancellation and Rescheduling Management
+Facilitates easy cancellations or changes to appointments through chat, keeping all parties informed and schedules updated.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Customizable Interactions
+Tailor chat messages to fit your business tone and customer engagement style.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## :coffee: Get in touch 
+For more information about **Little Help** or to schedule a demo, DM 💬💬 us!
+We're excited to see how **Little Help** can make a big difference in your business!
 
-## Using Docker
-
-1. Build an image for the Next.js app:
-
-```
-docker build -t <your_app_image_name> .
-```
-
-2. Generate embeddings:
-
-Parse the data and generate the vector embeddings if the `./data` folder exists - otherwise, skip this step:
-
-```
-docker run \
-  --rm \
-  -v $(pwd)/.env:/app/.env \ # Use ENV variables and configuration from your file-system
-  -v $(pwd)/config:/app/config \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/cache:/app/cache \ # Use your file system to store the vector database
-  <your_app_image_name> \
-  npm run generate
-```
-
-3. Start the app:
-
-```
-docker run \
-  --rm \
-  -v $(pwd)/.env:/app/.env \ # Use ENV variables and configuration from your file-system
-  -v $(pwd)/config:/app/config \
-  -v $(pwd)/cache:/app/cache \ # Use your file system to store gea vector database
-  -p 3000:3000 \
-  <your_app_image_name>
-```
-
-## Learn More
-
-To learn more about LlamaIndex, take a look at the following resources:
-
-- [LlamaIndex Documentation](https://docs.llamaindex.ai) - learn about LlamaIndex (Python features).
-- [LlamaIndexTS Documentation](https://ts.llamaindex.ai) - learn about LlamaIndex (Typescript features).
-
-You can check out [the LlamaIndexTS GitHub repository](https://github.com/run-llama/LlamaIndexTS) - your feedback and contributions are welcome!
