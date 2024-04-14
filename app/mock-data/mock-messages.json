@@ -40,5 +40,19 @@
             "id": "u5",
             "name": "Emma Fu"
         }
+    },
+    {
+        "id": "4",
+        "conversationId": "c1",
+        "content": "Thanks!",
+        "timestamp": "2024-04-13T05:55:50.555Z",
+        "sender": {
+            "id": "u1",
+            "name": "Tom Bowyer"
+        },
+        "receiver": {
+            "id": "u5",
+            "name": "Emma Fu"
+        }
     }
 ]
