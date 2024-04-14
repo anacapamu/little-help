@@ -5,7 +5,7 @@
 </p>
 
 ## 🧚🏻 About us
-**Little Help** is an AI-powered chat scheduler that helps small business owners enhance their customer service and manage their appointments more efficiently. We help you follow up with your customers, handle reservation and cancellations, rescheduling, send out reminders through intuitive chat messages.
+**Little Help** is an AI-powered chat scheduler that helps small business owners enhance their customer service and manage their appointments more efficiently. We help you follow up with your customers, handle reservations and cancellations, rescheduling, send out reminders through intuitive chat messages.
 
 ## 🔖 Features
 **Little Help** integrates with your WeChat, Whatsapp, iMessages and connects with Google Calendar, iCalendar, etc.
