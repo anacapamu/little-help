@@ -1,10 +1,27 @@
-import React from 'react';
+'use client';
 
+import React, { useEffect, useState } from 'react';
 import MessagesList from "./components/messages-list";
-import mockMessages from './mock-data/mock-messages.json'
 
 export default function Home() {
-  return (
-    <MessagesList currentUserId="u5" messages={mockMessages} />
-  );
+    const [messages, setMessages] = useState([]);
+    const currentUserId = "u1";
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const response = await fetch(`/api/read-messages?currentUserId=${currentUserId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setMessages(data);
+            } else {
+                console.error('Failed to fetch messages');
+            }
+        };
+
+        fetchMessages();
+    }, [currentUserId]);
+
+    return (
+        <MessagesList currentUserId={currentUserId} messages={messages} />
+    );
 }

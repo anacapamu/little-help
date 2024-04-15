@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -29,8 +29,7 @@ const MessagesList: React.FC<Props> = ({ messages, currentUserId }) => {
             }
         });
 
-        // TODO: figure out logic to display most recent unique message first
-        return Array.from(messagesMap.values()).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        return Array.from(messagesMap.values());
     }, [messages, currentUserId]);
 
     const handleSelectSender = (conversationId: string) => {
