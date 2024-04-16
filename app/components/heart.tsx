@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 interface HeartProps {
-    color: string;
+  color: string;
 }
 
 const Heart: React.FC<HeartProps> = ({ color }) => {
-    return <span style={{ color }}>{'\u2665'}</span>;
+  return <span style={{ color }}>{"\u2665"}</span>;
 };
 
 export default Heart;
