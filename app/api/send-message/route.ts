@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
-import db from "../../lib/firebase-client";
+import { db } from "../../lib/firebase-client";
 import { generateId } from "../../util/helper-functions";
 
 async function handler(req: NextRequest) {

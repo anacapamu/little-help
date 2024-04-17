@@ -1,5 +1,5 @@
 import { collection, doc, runTransaction } from "firebase/firestore";
-import db from "../lib/firebase-client";
+import { db } from "../lib/firebase-client";
 
 export async function generateId(type: string): Promise<string> {
   const counterRef = doc(collection(db, "counters"), `${type}Counter`);

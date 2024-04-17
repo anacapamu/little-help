@@ -1,6 +1,6 @@
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
-import db from "../../lib/firebase-client";
+import { db } from "../../lib/firebase-client";
 import { MessageType } from "../../util/types";
 
 async function handler(req: NextRequest) {

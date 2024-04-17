@@ -40,15 +40,11 @@ const MessageItem: React.FC<Props> = ({
           className={`flex flex-col ${isCurrentUser ? "items-end" : "items-start"} max-w-[75%]`}
         >
           <p
-            className={`rounded-lg ${isCurrentUser ? "rounded-tr-none bg-blue-500 text-white" : "rounded-tl-none bg-gray-100 dark:bg-gray-900"} p-4 text-sm break-words`}
+            className={`rounded-lg ${isCurrentUser ? "rounded-tr-none bg-orange-500 text-white" : "rounded-tl-none bg-gray-100 dark:bg-gray-900"} p-4 text-sm break-words`}
           >
             {content} {hasThanks && <Heart color="red" />}
           </p>
-          <p
-            className={`text-xs ${isCurrentUser ? "text-white" : "text-gray-500 dark:text-gray-400"} mt-1`}
-          >
-            {timeStr}
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{timeStr}</p>
         </div>
       </div>
     </Link>
