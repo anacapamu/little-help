@@ -7,9 +7,10 @@ import { MessageSchema } from "../util/types";
 
 interface Props {
   messages: MessageSchema[];
+  currentUserId: string;
 }
 
-const MessagesList: React.FC<Props> = ({ messages }) => {
+const MessagesList: React.FC<Props> = ({ messages, currentUserId }) => {
   const router = useRouter();
 
   const handleSelectMessage = (conversationId: string) => {
@@ -24,7 +25,7 @@ const MessagesList: React.FC<Props> = ({ messages }) => {
           onClick={() => handleSelectMessage(message.conversationId)}
           style={{ cursor: "pointer" }}
         >
-          <MessageItem message={message} preview={true} />
+          <MessageItem message={message} preview={true} currentUserId={currentUserId} />
         </div>
       ))}
     </div>

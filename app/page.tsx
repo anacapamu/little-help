@@ -31,5 +31,5 @@ export default function Home() {
         fetchConversations();
     }, [currentUserId]);
 
-    return <MessagesList messages={messages} />;
+    return <MessagesList messages={messages} currentUserId={currentUserId}/>;
 }
