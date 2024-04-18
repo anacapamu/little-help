@@ -56,13 +56,16 @@ async function handler(req: NextRequest) {
   } catch (error) {
     console.error("Error adding user: ", error);
     if (error instanceof Error) {
-      return NextResponse.json({ error: 'Failed to add user', details: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to add user", details: error.message },
+        { status: 500 },
+      );
     } else {
-    return NextResponse.json(
-      { error: "Failed to add user", details: "An unknown error occurred" },
-      { status: 500 },
-    );
-  }
+      return NextResponse.json(
+        { error: "Failed to add user", details: "An unknown error occurred" },
+        { status: 500 },
+      );
+    }
   }
 }
 

@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
-import MessageItem from "./message-item";
 import { MessageSchema } from "../util/types";
+import MessageItem from "./message-item";
 
 interface Props {
   messages: MessageSchema[];
@@ -25,7 +25,11 @@ const MessagesList: React.FC<Props> = ({ messages, currentUserId }) => {
           onClick={() => handleSelectMessage(message.conversationId)}
           style={{ cursor: "pointer" }}
         >
-          <MessageItem message={message} preview={true} currentUserId={currentUserId} />
+          <MessageItem
+            message={message}
+            preview={true}
+            currentUserId={currentUserId}
+          />
         </div>
       ))}
     </div>

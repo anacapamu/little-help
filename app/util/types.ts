@@ -16,4 +16,4 @@ export interface MessageSchema {
 export interface ConversationSchema {
   conversationId: string;
   participants: string[];
-};
+}

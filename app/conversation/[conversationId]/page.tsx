@@ -21,7 +21,9 @@ const Conversation: React.FC = () => {
 
   const fetchMessages = async (id: string) => {
     try {
-      const response = await fetch(`/api/read-conversation?conversationId=${id}&currentUserId=${currentUserId}`);
+      const response = await fetch(
+        `/api/read-conversation?conversationId=${id}&currentUserId=${currentUserId}`,
+      );
       if (!response.ok) throw new Error("Network response was not ok");
       const { messages, otherParticipantId } = await response.json();
       setMessages(messages);
@@ -34,7 +36,9 @@ const Conversation: React.FC = () => {
 
   const fetchParticipantDetails = async (participantId: string) => {
     try {
-      const response = await fetch(`/api/get-user-details?userId=${participantId}`);
+      const response = await fetch(
+        `/api/get-user-details?userId=${participantId}`,
+      );
       if (!response.ok) throw new Error("Network response was not ok");
       const { userName, profilePicUrl } = await response.json();
       setChatParticipantName(userName);
@@ -70,8 +74,8 @@ const Conversation: React.FC = () => {
           message={message}
           preview={false}
           currentUserId={currentUserId}
-        />)
-      )}
+        />
+      ))}
     </div>
   );
 };
