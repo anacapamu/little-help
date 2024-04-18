@@ -8,9 +8,10 @@ import { MessageSchema } from "../../util/types";
 
 const Conversation: React.FC = () => {
   const [messages, setMessages] = useState<MessageSchema[]>([]);
-  const [senderName, setSenderName] = useState<string>("");
+  const [chatParticipantName, setChatParticipantName] = useState<string>("");
+  const [profilePicUrl, setProfilePicUrl] = useState<string>("");
   const { conversationId } = useParams();
-  const currentUserId = "u1";
+  const currentUserId = "u1"; // TODO: dynamically set based on the authenticated user
 
   useEffect(() => {
     if (typeof conversationId === "string") {
@@ -20,16 +21,28 @@ const Conversation: React.FC = () => {
 
   const fetchMessages = async (id: string) => {
     try {
-      const response = await fetch(`/api/read-messages?conversationId=${id}`);
+      const response = await fetch(`/api/read-conversation?conversationId=${id}&currentUserId=${currentUserId}`);
       if (!response.ok) throw new Error("Network response was not ok");
-      const data: MessageSchema[] = await response.json();
-      setMessages(data);
-      if (data.length > 0) {
-        setSenderName(data[0].sender.name);
-      }
+      const { messages, otherParticipantId } = await response.json();
+      setMessages(messages);
+      fetchParticipantDetails(otherParticipantId);
     } catch (error) {
       console.error("Fetch error:", error);
-      setSenderName("Error loading messages");
+      setChatParticipantName("Error loading messages");
+    }
+  };
+
+  const fetchParticipantDetails = async (participantId: string) => {
+    try {
+      const response = await fetch(`/api/get-user-details?userId=${participantId}`);
+      if (!response.ok) throw new Error("Network response was not ok");
+      const { userName, profilePicUrl } = await response.json();
+      setChatParticipantName(userName);
+      setProfilePicUrl(profilePicUrl);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setChatParticipantName("No Name");
+      setProfilePicUrl("/../../../public/errorProfilePic.png");
     }
   };
 
@@ -40,7 +53,7 @@ const Conversation: React.FC = () => {
           alt="Profile Picture"
           className="rounded-full border-dashed border-2 border-gray-300"
           height={64}
-          src=""
+          src={profilePicUrl}
           style={{
             aspectRatio: "64/64",
             objectFit: "cover",
@@ -49,7 +62,7 @@ const Conversation: React.FC = () => {
         />
       </div>
       <div className="font-semibold text-lg text-center py-2">
-        <h2>{senderName || "Loading..."} - Barre Client</h2>
+        <h2>{chatParticipantName || "Loading..."} - Barre Client</h2>
       </div>
       {messages.map((message) => (
         <MessageItem
@@ -57,8 +70,8 @@ const Conversation: React.FC = () => {
           message={message}
           preview={false}
           currentUserId={currentUserId}
-        />
-      ))}
+        />)
+      )}
     </div>
   );
 };
