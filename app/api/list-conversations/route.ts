@@ -3,7 +3,7 @@ import { db } from '../../lib/firebase-client';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { ConversationSchema  } from '../../util/types';
 
-async function listConversations(req: NextRequest) {
+async function handler(req: NextRequest) {
     if (req.method !== 'GET') {
         return NextResponse.json({ error: `Method ${req.method} Not Allowed` }, { status: 405 });
     }
@@ -38,4 +38,4 @@ async function listConversations(req: NextRequest) {
     }
 }
 
-export { listConversations as GET };
+export { handler as GET };
