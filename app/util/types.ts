@@ -1,4 +1,4 @@
-export interface MessageType {
+export interface MessageSchema {
   id: string;
   conversationId: string;
   content: string;
@@ -12,3 +12,8 @@ export interface MessageType {
     name: string;
   };
 }
+
+export interface ConversationSchema {
+  conversationId: string;
+  participants: string[];
+};

@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import MessageItem from "../../components/message-item";
-import { MessageType } from "../../util/types";
+import { MessageSchema } from "../../util/types";
 
 const Conversation: React.FC = () => {
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [messages, setMessages] = useState<MessageSchema[]>([]);
   const [senderName, setSenderName] = useState<string>("");
   const { conversationId } = useParams();
   const currentUserId = "u1";
@@ -22,7 +22,7 @@ const Conversation: React.FC = () => {
     try {
       const response = await fetch(`/api/read-messages?conversationId=${id}`);
       if (!response.ok) throw new Error("Network response was not ok");
-      const data: MessageType[] = await response.json();
+      const data: MessageSchema[] = await response.json();
       setMessages(data);
       if (data.length > 0) {
         setSenderName(data[0].sender.name);

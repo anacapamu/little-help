@@ -36,7 +36,7 @@ const CreateUserForm: React.FC = () => {
     } catch (error) {
       console.error("Error:", error);
       setMessage(
-        `Error creating user. Please check the console for more information. Error: ${error.message}`,
+        `Error creating user. Please check the console for more information.`,
       );
     }
   };

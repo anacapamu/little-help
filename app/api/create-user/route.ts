@@ -53,12 +53,16 @@ async function handler(req: NextRequest) {
     );
 
     return NextResponse.json({ userId, userName, profilePicUrl });
-  } catch (e) {
-    console.error("Error adding user: ", e);
+  } catch (error) {
+    console.error("Error adding user: ", error);
+    if (error instanceof Error) {
+      return NextResponse.json({ error: 'Failed to add user', details: error.message }, { status: 500 });
+    } else {
     return NextResponse.json(
-      { error: "Failed to add user", details: e.message },
+      { error: "Failed to add user", details: "An unknown error occurred" },
       { status: 500 },
     );
+  }
   }
 }
 

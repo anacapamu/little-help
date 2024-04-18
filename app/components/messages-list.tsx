@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
-import { MessageType } from "../util/types";
+import { MessageSchema } from "../util/types";
 import MessageItem from "./message-item";
 
 interface Props {
-  messages: MessageType[];
+  messages: MessageSchema[];
   currentUserId: string;
 }
 

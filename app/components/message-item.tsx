@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React from "react";
-import { MessageType } from "../util/types";
+import { MessageSchema } from "../util/types";
 import Heart from "./heart";
 
 interface Props {
-  message: MessageType;
+  message: MessageSchema;
   preview?: boolean;
   currentUserId?: string;
 }
