@@ -1,12 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "../../lib/firebase-client";
 import { MessageSchema } from "../../util/types";
@@ -31,26 +23,6 @@ async function handler(req: NextRequest) {
   }
 
   try {
-    // Fetch the conversation to get participant IDs
-    const conversationRef = doc(db, "conversations", conversationId);
-    const conversationDoc = await getDoc(conversationRef);
-    if (!conversationDoc.exists()) {
-      return new NextResponse(
-        JSON.stringify({ error: "Conversation not found" }),
-        {
-          status: 404,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-    }
-    const participants = conversationDoc.data().participants;
-    const chatParticipantId = participants.find(
-      (p: string) => p !== currentUserId,
-    );
-
-    // Query for messages in the conversation
     const messagesQuery = query(
       collection(db, "messages"),
       where("conversationId", "==", conversationId),
@@ -63,15 +35,12 @@ async function handler(req: NextRequest) {
       timestamp: new Date(doc.data().timestamp).toISOString(),
     }));
 
-    return new NextResponse(
-      JSON.stringify({ messages, otherParticipantId: chatParticipantId }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-        },
+    return new NextResponse(JSON.stringify({ messages }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
   } catch (error) {
     console.error("Error fetching conversation data:", error);
     if (error instanceof Error) {

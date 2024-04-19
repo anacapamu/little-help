@@ -26,10 +26,10 @@ async function handler(req: NextRequest) {
     if (!senderDoc.exists() || !receiverDoc.exists()) {
       return new NextResponse("Sender or receiver not found", { status: 404 });
     }
-    const senderName = senderDoc.data().username;
-    const receiverName = receiverDoc.data().username;
+    const senderName = senderDoc.data().userName;
+    const receiverName = receiverDoc.data().userName;
 
-    // Check if a conversationId exists
+    // Handle conversation ID creation or retrieval
     const conversationQuery = query(
       collection(db, "conversations"),
       where("participants", "==", [senderId, receiverId].sort()),
@@ -38,20 +38,17 @@ async function handler(req: NextRequest) {
 
     let conversationId;
     if (querySnapshot.empty) {
-      // No conversationId exists, create a new one
       conversationId = await generateId("conversation");
       await setDoc(doc(db, "conversations", conversationId), {
         participants: [senderId, receiverId].sort(),
       });
     } else {
-      // Use existing conversationID
-      const conversationData = querySnapshot.docs[0];
-      conversationId = conversationData.id;
+      conversationId = querySnapshot.docs[0].id;
     }
 
     // Create a new message
     const messageId = await generateId("message");
-    await addDoc(collection(db, "messages"), {
+    const newMessage = {
       id: messageId,
       conversationId,
       content,
@@ -64,16 +61,10 @@ async function handler(req: NextRequest) {
         id: receiverId,
         name: receiverName,
       },
-    });
+    };
+    await addDoc(collection(db, "messages"), newMessage);
 
-    return NextResponse.json({
-      success: true,
-      messageId,
-      conversationId,
-      content,
-      senderName,
-      receiverName,
-    });
+    return NextResponse.json(newMessage);
   } catch (error) {
     console.error("Failed to send message:", error);
     return new NextResponse("Failed to send message", { status: 500 });
