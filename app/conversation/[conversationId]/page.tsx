@@ -1,6 +1,8 @@
 "use client";
 
+import Button from "@/app/components/button";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import MessageInputBox from "../../components/message-input-box";
@@ -87,18 +89,28 @@ const Conversation: React.FC = () => {
   return (
     <div className="flex flex-col h-[600px] rounded-t-xl overflow-hidden">
       <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950 px-4 py-4 space-y-4">
-        <div className="flex items-center justify-center">
-          <Image
-            alt="Profile Picture"
-            className="rounded-full border-dashed border-2 border-gray-300"
-            height={64}
-            src={profilePicUrl}
-            style={{
-              aspectRatio: "64/64",
-              objectFit: "cover",
-            }}
-            width={64}
-          />
+        <div className="flex items-center justify-between mb-4">
+          <Link href="/" passHref>
+            <Button
+              text="<"
+              buttonColor="transparent"
+              textColor="#fe924d"
+              style={{ fontSize: "24px", lineHeight: "64px" }}
+            />
+          </Link>
+          <div className="flex-1 flex justify-center">
+            <Image
+              alt="Profile Picture"
+              className="rounded-full border-dashed border-2 border-gray-300"
+              height={64}
+              src={profilePicUrl}
+              style={{
+                aspectRatio: "1",
+                objectFit: "cover",
+              }}
+              width={64}
+            />
+          </div>
         </div>
         <div className="font-semibold text-lg text-center py-2">
           <h2>{chatParticipantName || "Loading..."} - Barre Client</h2>

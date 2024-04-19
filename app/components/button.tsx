@@ -4,15 +4,23 @@ interface Props {
   text: string;
   buttonColor: string;
   textColor?: string;
-  onClick: () => void;
+  style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
-const Button: React.FC<Props> = ({ buttonColor, textColor, onClick, text }) => {
+const Button: React.FC<Props> = ({
+  buttonColor,
+  textColor,
+  onClick,
+  text,
+  style,
+}) => {
   return (
     <button
       style={{
         backgroundColor: buttonColor,
         color: textColor,
+        ...style,
       }}
       onClick={onClick}
     >
