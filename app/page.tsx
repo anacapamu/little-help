@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import MessagesHeader from "./components/messages-header";
 import MessagesList from "./components/messages-list";
 import { ConversationSchema, MessageSchema } from "./util/types";
 
@@ -37,5 +38,10 @@ export default function Home() {
     fetchConversations();
   }, [currentUserId]);
 
-  return <MessagesList messages={messages} currentUserId={currentUserId} />;
+  return (
+    <div className="flex flex-col h-full min-h-screen rounded-t-xl overflow-hidden bg-gray-50 dark:bg-gray-950">
+      <MessagesHeader backgroundColor="#f2884b" />
+      <MessagesList messages={messages} currentUserId={currentUserId} />
+    </div>
+  );
 }

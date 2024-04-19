@@ -36,7 +36,7 @@ const MessageInputBox: React.FC<Props> = ({
         cols={50}
         style={{
           borderRadius: "5px",
-          border: "2px solid #fe924d",
+          border: "2px solid #f2884b",
           padding: "10px",
           resize: "none",
           width: "100%",
@@ -45,7 +45,7 @@ const MessageInputBox: React.FC<Props> = ({
       />
       <Button
         text="Send"
-        buttonColor="#fe924d"
+        buttonColor="#f2884b"
         textColor="white"
         onClick={handleSubmit}
         style={{ borderRadius: "5px", padding: "10px 20px" }}

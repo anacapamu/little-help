@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
   textColor?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  iconSrc?: string;
   onClick?: () => void;
 }
 
@@ -16,6 +18,7 @@ const Button: React.FC<Props> = ({
   text,
   style,
   children,
+  iconSrc,
 }) => {
   return (
     <button
@@ -26,6 +29,11 @@ const Button: React.FC<Props> = ({
       }}
       onClick={onClick}
     >
+      {iconSrc && (
+        <div style={{ width: 25, height: 25, position: "relative" }}>
+          <Image src={iconSrc} alt="icon" layout="fill" objectFit="contain" />
+        </div>
+      )}
       {text || children}
     </button>
   );

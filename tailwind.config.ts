@@ -15,7 +15,7 @@ const config: Config = {
       },
       colors: {
         orange: {
-          "500": "#fe924d",
+          "500": "#f2884b",
         },
       },
     },

@@ -12,7 +12,9 @@ import { MessageSchema } from "../../util/types";
 const Conversation: React.FC = () => {
   const [messages, setMessages] = useState<MessageSchema[]>([]);
   const [chatParticipantName, setChatParticipantName] = useState<string>("");
-  const [profilePicUrl, setProfilePicUrl] = useState<string>("");
+  const [profilePicUrl, setProfilePicUrl] = useState<string>(
+    "/defaultProfilePic.png",
+  );
   const [chatParticipantId, setChatParticipantId] = useState<string>("");
   const [littleHelpOn, setLittleHelpOn] = useState(true);
   const { conversationId } = useParams();
@@ -58,7 +60,6 @@ const Conversation: React.FC = () => {
       setProfilePicUrl(userDetails.profilePicUrl);
     } catch (error) {
       console.error("Fetch error:", error);
-      setProfilePicUrl("/../../../public/errorProfilePic.png");
     }
   };
 
@@ -88,7 +89,7 @@ const Conversation: React.FC = () => {
   };
 
   const toggleLittleHelp = () => {
-    setLittleHelpOn(!littleHelpOn);
+    setLittleHelpOn(!littleHelpOn); // TODO: add logic to stop AI from responding
   };
 
   return (
@@ -99,7 +100,7 @@ const Conversation: React.FC = () => {
             <Button
               text="<"
               buttonColor="transparent"
-              textColor="#fe924d"
+              textColor="#f2884b"
               style={{ fontSize: "24px", lineHeight: "64px" }}
             />
           </Link>
@@ -138,7 +139,7 @@ const Conversation: React.FC = () => {
         <Button
           onClick={toggleLittleHelp}
           buttonColor="transparent"
-          textColor="#fe924d"
+          textColor="#f2884b"
         >
           <span className="font-semibold italic">Little Help</span>
           <span>{` is turned ${littleHelpOn ? "on" : "off"}. Click to switch ${littleHelpOn ? "off" : "on"}.`}</span>
