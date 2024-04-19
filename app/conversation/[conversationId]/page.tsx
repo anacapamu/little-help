@@ -14,6 +14,7 @@ const Conversation: React.FC = () => {
   const [chatParticipantName, setChatParticipantName] = useState<string>("");
   const [profilePicUrl, setProfilePicUrl] = useState<string>("");
   const [chatParticipantId, setChatParticipantId] = useState<string>("");
+  const [littleHelpOn, setLittleHelpOn] = useState(true);
   const { conversationId } = useParams();
   const currentUserId = "u1"; // TODO: dynamically set based on the authenticated user
 
@@ -86,9 +87,13 @@ const Conversation: React.FC = () => {
     }
   };
 
+  const toggleLittleHelp = () => {
+    setLittleHelpOn(!littleHelpOn);
+  };
+
   return (
-    <div className="flex flex-col h-[600px] rounded-t-xl overflow-hidden">
-      <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950 px-4 py-4 space-y-4">
+    <div className="flex flex-col h-full min-h-screen rounded-t-xl overflow-hidden bg-gray-50 dark:bg-gray-950">
+      <div className="flex-grow overflow-y-auto px-4 py-4 space-y-4">
         <div className="flex items-center justify-between mb-4">
           <Link href="/" passHref>
             <Button
@@ -124,10 +129,20 @@ const Conversation: React.FC = () => {
           />
         ))}
       </div>
-      <div className="border-t border-gray-200 dark:border-gray-800">
-        <div className="flex items-center gap-4 p-4">
-          <MessageInputBox placeholder="Message" onSubmit={handleSendMessage} />
-        </div>
+      <div className="border-t border-gray-200 dark:border-gray-800 p-4 flex flex-col items-center space-y-4">
+        <MessageInputBox
+          placeholder="Message"
+          onSubmit={handleSendMessage}
+          disabled={littleHelpOn}
+        />
+        <Button
+          onClick={toggleLittleHelp}
+          buttonColor="transparent"
+          textColor="#fe924d"
+        >
+          <span className="font-semibold italic">Little Help</span>
+          <span>{` is turned ${littleHelpOn ? "on" : "off"}. Click to switch ${littleHelpOn ? "off" : "on"}.`}</span>
+        </Button>
       </div>
     </div>
   );
