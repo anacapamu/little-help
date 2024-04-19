@@ -31,7 +31,7 @@ const Button: React.FC<Props> = ({
     >
       {iconSrc && (
         <div style={{ width: 25, height: 25, position: "relative" }}>
-          <Image src={iconSrc} alt="icon" layout="fill" objectFit="contain" />
+          <Image src={iconSrc} alt="icon" width={25} height={25} />
         </div>
       )}
       {text || children}

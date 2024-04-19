@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/app/components/button";
-import Image from "next/image";
+import ProfilePicDisplay from "@/app/components/profile-pic-display";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -105,16 +105,10 @@ const Conversation: React.FC = () => {
             />
           </Link>
           <div className="flex-1 flex justify-center">
-            <Image
-              alt="Profile Picture"
-              className="rounded-full border-dashed border-2 border-gray-300"
-              height={64}
+            <ProfilePicDisplay
               src={profilePicUrl}
-              style={{
-                aspectRatio: "1",
-                objectFit: "cover",
-              }}
-              width={64}
+              borderColor="border-gray-300"
+              size={64}
             />
           </div>
         </div>

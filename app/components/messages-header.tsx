@@ -1,11 +1,11 @@
 import React from "react";
 import Button from "./button";
 
-interface MessagesHeaderProps {
+interface Props {
   backgroundColor: string;
 }
 
-const MessagesHeader: React.FC<MessagesHeaderProps> = ({ backgroundColor }) => {
+const MessagesHeader: React.FC<Props> = ({ backgroundColor }) => {
   return (
     <div
       style={{
@@ -24,7 +24,9 @@ const MessagesHeader: React.FC<MessagesHeaderProps> = ({ backgroundColor }) => {
           console.log("Edit clicked"); // TODO: add edit function
         }}
       />
-      <h1 style={{ margin: 0, color: "white" }}>Messages</h1>
+      <h1 style={{ margin: 0, color: "white", fontWeight: "bold" }}>
+        Messages
+      </h1>
       <Button
         buttonColor="transparent"
         iconSrc="/whiteComposeIcon.png"
