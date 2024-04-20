@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
@@ -29,7 +30,7 @@ async function handler(req: NextRequest) {
     const senderName = senderDoc.data().userName;
     const receiverName = receiverDoc.data().userName;
 
-    // Handle conversation ID creation or retrieval
+    const participants = [senderId, receiverId].sort();
     const conversationQuery = query(
       collection(db, "conversations"),
       where("participants", "==", [senderId, receiverId].sort()),
@@ -39,11 +40,25 @@ async function handler(req: NextRequest) {
     let conversationId;
     if (querySnapshot.empty) {
       conversationId = await generateId("conversation");
-      await setDoc(doc(db, "conversations", conversationId), {
-        participants: [senderId, receiverId].sort(),
-      });
+      const newConversationData = {
+        participants,
+        lastResponseTimeByUser: {
+          [senderId]: new Date().toISOString(),
+        },
+      };
+      await setDoc(
+        doc(db, "conversations", conversationId),
+        newConversationData,
+      );
     } else {
       conversationId = querySnapshot.docs[0].id;
+      const lastResponseUpdate = {
+        [`lastResponseTimeByUser.${senderId}`]: new Date().toISOString(),
+      };
+      await updateDoc(
+        doc(db, "conversations", conversationId),
+        lastResponseUpdate,
+      );
     }
 
     // Create a new message
