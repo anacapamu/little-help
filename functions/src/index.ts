@@ -22,20 +22,21 @@ const context = fs.readFileSync(filePath, "utf8");
 export const processMessages = functions.pubsub
   .schedule("every 5 minutes")
   .onRun(async (context) => {
-    const oneDayAgo = admin.firestore.Timestamp.fromDate(
-      new Date(Date.now() - 86400000)
-  );
+    const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
+    console.log("Checking messages since:", oneDayAgo);
 
-    // Retrieve all messages from the last 2 minutes
+    // Retrieve all messages from the last 24 hours
     const messagesRef = db
       .collection("messages")
-      .where("createdAt", ">=", oneDayAgo);
+      .where("timestamp", ">=", oneDayAgo);
     const messages = await messagesRef.get();
 
     if (messages.empty) {
       console.log("No new messages");
       return null;
     }
+
+    console.log(`Processing ${messages.size} messages...`);
 
     const conversations: Record<string, Record<string, string[]>> = {};
     messages.forEach((doc) => {
@@ -61,18 +62,20 @@ export const processMessages = functions.pubsub
       }
 
       const convoData = convoDoc.data()!;
-      if (!convoData.participants.includes("currentUser")) {
+      if (!convoData.participants.includes("u1")) {
         continue;
       }
 
-      const lastResponseTimestamp =
-        convoData.lastResponseTimeByUser["currentUser"];
+      const lastResponseTimestamp = convoData.lastResponseTimeByUser["u1"];
 
       for (const [senderId, texts] of Object.entries(senders)) {
-        const messages = texts.map((text) => ({ text, createdAt: new Date() }));
+        const messages = texts.map((text) => ({
+          text,
+          timestamp: new Date().toISOString(),
+        }));
         // Filter out messages that were sent before the last response from currentUser
         const filteredMessages = messages.filter(
-          (msg) => msg.createdAt > new Date(lastResponseTimestamp),
+          (msg) => new Date(msg.timestamp) > new Date(lastResponseTimestamp),
         );
         if (filteredMessages.length === 0) {
           continue;
@@ -100,7 +103,9 @@ export const processMessages = functions.pubsub
           stream: false,
         });
 
-        await fetch("/api/send-message", {
+        console.log(`AI Response: ${response.choices[0].message}`);
+
+        await fetch("http://localhost:3000/api/send-message", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

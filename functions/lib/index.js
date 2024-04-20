@@ -29,16 +29,18 @@ const context = fs.readFileSync(filePath, "utf8");
 exports.processMessages = functions.pubsub
     .schedule("every 5 minutes")
     .onRun((context) => __awaiter(void 0, void 0, void 0, function* () {
-    const oneDayAgo = admin.firestore.Timestamp.fromDate(new Date(Date.now() - 86400000));
-    // Retrieve all messages from the last 2 minutes
+    const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
+    console.log("Checking messages since:", oneDayAgo);
+    // Retrieve all messages from the last 24 hours
     const messagesRef = db
         .collection("messages")
-        .where("createdAt", ">=", oneDayAgo);
+        .where("timestamp", ">=", oneDayAgo);
     const messages = yield messagesRef.get();
     if (messages.empty) {
         console.log("No new messages");
         return null;
     }
+    console.log(`Processing ${messages.size} messages...`);
     const conversations = {};
     messages.forEach((doc) => {
         const msg = doc.data();
@@ -60,14 +62,17 @@ exports.processMessages = functions.pubsub
             continue;
         }
         const convoData = convoDoc.data();
-        if (!convoData.participants.includes("currentUser")) {
+        if (!convoData.participants.includes("u1")) {
             continue;
         }
-        const lastResponseTimestamp = convoData.lastResponseTimeByUser["currentUser"];
+        const lastResponseTimestamp = convoData.lastResponseTimeByUser["u1"];
         for (const [senderId, texts] of Object.entries(senders)) {
-            const messages = texts.map((text) => ({ text, createdAt: new Date() }));
+            const messages = texts.map((text) => ({
+                text,
+                timestamp: new Date().toISOString(),
+            }));
             // Filter out messages that were sent before the last response from currentUser
-            const filteredMessages = messages.filter((msg) => msg.createdAt > new Date(lastResponseTimestamp));
+            const filteredMessages = messages.filter((msg) => new Date(msg.timestamp) > new Date(lastResponseTimestamp));
             if (filteredMessages.length === 0) {
                 continue;
             }
@@ -92,7 +97,8 @@ exports.processMessages = functions.pubsub
                 n: 1,
                 stream: false,
             });
-            yield (0, node_fetch_1.default)("/api/send-message", {
+            console.log(`AI Response: ${response.choices[0].message}`);
+            yield (0, node_fetch_1.default)("http://localhost:3000/api/send-message", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
