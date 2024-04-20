@@ -51,11 +51,16 @@ const MessageItem: React.FC<Props> = ({
           {preview ? (
             <p>{content}</p>
           ) : (
-            <p
-              className={`${borderRadiusClass} ${bgColorClass} p-4 text-sm break-words`}
-            >
-              {content} {hasThanks && <Heart color="red" />}
-            </p>
+            <div className="flex items-start">
+              <div
+                className={`${borderRadiusClass} ${bgColorClass} p-4 text-sm break-words`}
+              >
+                {content}
+              </div>
+              {hasThanks && (
+                <Heart color="red" style={{ alignSelf: "flex-end" }} />
+              )}
+            </div>
           )}
           {!preview && (
             <p className="text-xs text-gray-500 mt-1">
