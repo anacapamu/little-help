@@ -28,9 +28,6 @@ const MessageItem: React.FC<Props> = ({
   const hasThanks =
     /thanks|thank you/i.test(message.content) && !isCurrentUser && !preview;
 
-  const timestamp = new Date(message.timestamp);
-  const timeStr = `${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2, "0")}`;
-
   const justifyContent = preview
     ? "flex-start"
     : isCurrentUser
@@ -50,14 +47,25 @@ const MessageItem: React.FC<Props> = ({
   return (
     <Link href={`/conversation/${message.conversationId}`}>
       <div style={{ display: "flex", alignItems: "center", justifyContent }}>
-        {preview && <h4>{chatParticipantName}</h4>}
         <div className={`flex flex-col items-start max-w-[75%]`}>
-          <p
-            className={`${borderRadiusClass} ${bgColorClass} p-4 text-sm break-words`}
-          >
-            {content} {hasThanks && <Heart color="red" />}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">{timeStr}</p>
+          {preview ? (
+            <p>{content}</p>
+          ) : (
+            <p
+              className={`${borderRadiusClass} ${bgColorClass} p-4 text-sm break-words`}
+            >
+              {content} {hasThanks && <Heart color="red" />}
+            </p>
+          )}
+          {!preview && (
+            <p className="text-xs text-gray-500 mt-1">
+              {new Date(message.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </p>
+          )}
         </div>
       </div>
     </Link>

@@ -2,6 +2,7 @@
 
 import Button from "@/app/components/button";
 import ProfilePicDisplay from "@/app/components/profile-pic-display";
+import UserNameDisplay from "@/app/components/user-name-display";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -113,7 +114,10 @@ const Conversation: React.FC = () => {
           </div>
         </div>
         <div className="font-semibold text-lg text-center py-2">
-          <h2>{chatParticipantName || "Loading..."} - Barre Client</h2>
+          <UserNameDisplay
+            userName={chatParticipantName}
+            companyName="Barre Client"
+          />
         </div>
         {messages.map((message) => (
           <MessageItem
