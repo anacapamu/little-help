@@ -1,41 +1,35 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.processMessages = void 0;
-const admin = require("firebase-admin");
-const functions = require("firebase-functions");
-const fs = require("fs");
-const node_fetch_1 = require("node-fetch");
-const openai_1 = require("openai");
-const path = require("path");
-var serviceAccount = require("../serviceAccount.json");
+import admin from "firebase-admin";
+import functions from "firebase-functions";
+import fs from "fs";
+import fetch from "node-fetch";
+import OpenAI from "openai";
+import path from "path";
+import { fileURLToPath } from 'url';
+const serviceAccountJson = await import("./serviceAccount.json", {
+    assert: { type: "json" }
+});
+const serviceAccount = serviceAccountJson.default;
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
-const openai = new openai_1.default({
+const openai = new OpenAI({
     apiKey: functions.config().openai.key,
 });
-const filePath = path.join(__dirname, "./context.txt");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const filePath = path.join(__dirname, "../src/context.txt");
 const context = fs.readFileSync(filePath, "utf8");
-exports.processMessages = functions.pubsub
+export const processMessages = functions.pubsub
     .schedule("every 5 minutes")
-    .onRun((context) => __awaiter(void 0, void 0, void 0, function* () {
+    .onRun(async () => {
     const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
     console.log("Checking messages since:", oneDayAgo);
     // Retrieve all messages from the last 24 hours
     const messagesRef = db
         .collection("messages")
         .where("timestamp", ">=", oneDayAgo);
-    const messages = yield messagesRef.get();
+    const messages = await messagesRef.get();
     if (messages.empty) {
         console.log("No new messages");
         return null;
@@ -56,7 +50,7 @@ exports.processMessages = functions.pubsub
     });
     for (const [convoId, senders] of Object.entries(conversations)) {
         const convoRef = db.collection("conversations").doc(convoId);
-        const convoDoc = yield convoRef.get();
+        const convoDoc = await convoRef.get();
         if (!convoDoc.exists || !convoDoc.data()) {
             console.log(`No conversation found for ID: ${convoId}`);
             continue;
@@ -77,7 +71,7 @@ exports.processMessages = functions.pubsub
                 continue;
             }
             const fullMessage = filteredMessages.map((msg) => msg.text).join(" ");
-            const response = yield openai.chat.completions.create({
+            const response = await openai.chat.completions.create({
                 model: "gpt-4-turbo",
                 messages: [
                     {
@@ -97,20 +91,28 @@ exports.processMessages = functions.pubsub
                 n: 1,
                 stream: false,
             });
-            console.log(`AI Response: ${response.choices[0].message}`);
-            yield (0, node_fetch_1.default)("http://localhost:3000/api/send-message", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    senderId: "currentUser",
-                    receiverId: senderId,
-                    content: response.choices[0].message,
-                }),
-            });
+            try {
+                const sendMessageResponse = await fetch("https://little-help.vercel.app/api/send-message", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        senderId: "u1",
+                        receiverId: senderId,
+                        content: response.choices[0].message.content,
+                    }),
+                });
+                if (sendMessageResponse.ok) {
+                    console.log("Message sent successfully:", response.choices[0].message.content);
+                }
+                else {
+                    console.error("Failed to send message:", await sendMessageResponse.text());
+                }
+            }
+            catch (error) {
+                console.error("Error sending message:", error);
+            }
         }
     }
     return null;
-}));
+});
 //# sourceMappingURL=index.js.map

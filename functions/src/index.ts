@@ -1,27 +1,36 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import * as fs from "fs";
-import fetch from "node-fetch";
+import admin, { ServiceAccount } from "firebase-admin";
+import functions from "firebase-functions";
+import fs from "fs";
+import fetch from "node-fetch"
 import OpenAI from "openai";
-import * as path from "path";
+import path from "path";
+import { fileURLToPath } from 'url';
 
-var serviceAccount = require("../serviceAccount.json");
+const serviceAccountJson = await import("./serviceAccount.json", {
+  assert: { type: "json" }
+});
+
+const serviceAccount = serviceAccountJson.default as ServiceAccount;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+
 
 const db = admin.firestore();
 const openai = new OpenAI({
   apiKey: functions.config().openai.key,
 });
 
-const filePath = path.join(__dirname, "./context.txt");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const filePath = path.join(__dirname, "../src/context.txt");
 const context = fs.readFileSync(filePath, "utf8");
 
 export const processMessages = functions.pubsub
   .schedule("every 5 minutes")
-  .onRun(async (context) => {
+  .onRun(async () => {
     const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
     console.log("Checking messages since:", oneDayAgo);
 
@@ -103,19 +112,25 @@ export const processMessages = functions.pubsub
           stream: false,
         });
 
-        console.log(`AI Response: ${response.choices[0].message}`);
+        try {
+          const sendMessageResponse = await fetch("https://little-help.vercel.app/api/send-message", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              senderId: "u1",
+              receiverId: senderId,
+              content: response.choices[0].message.content,
+            }),
+          });
 
-        await fetch("http://localhost:3000/api/send-message", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            senderId: "currentUser",
-            receiverId: senderId,
-            content: response.choices[0].message,
-          }),
-        });
+          if (sendMessageResponse.ok) {
+            console.log("Message sent successfully:", response.choices[0].message.content);
+          } else {
+            console.error("Failed to send message:", await sendMessageResponse.text());
+          }
+        } catch (error) {
+          console.error("Error sending message:", error);
+        }
       }
     }
 
