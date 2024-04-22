@@ -26,9 +26,7 @@ export const processMessages = functions.pubsub
     const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
     console.log("Checking messages since:", oneDayAgo);
     // Retrieve all messages from the last 24 hours
-    const messagesRef = db
-        .collection("messages")
-        .where("timestamp", ">=", oneDayAgo);
+    const messagesRef = db.collection("messages").where("timestamp", ">=", oneDayAgo);
     const messages = await messagesRef.get();
     if (messages.empty) {
         console.log("No new messages");
@@ -38,6 +36,9 @@ export const processMessages = functions.pubsub
     const conversations = {};
     messages.forEach((doc) => {
         const msg = doc.data();
+        if (msg.sender.id === "u1") {
+            return;
+        }
         const convoKey = msg.conversationId;
         const senderKey = msg.sender.id;
         if (!conversations[convoKey]) {
@@ -46,7 +47,7 @@ export const processMessages = functions.pubsub
         if (!conversations[convoKey][senderKey]) {
             conversations[convoKey][senderKey] = [];
         }
-        conversations[convoKey][senderKey].push(msg.content);
+        conversations[convoKey][senderKey].push({ content: msg.content, timestamp: msg.timestamp });
     });
     for (const [convoId, senders] of Object.entries(conversations)) {
         const convoRef = db.collection("conversations").doc(convoId);
@@ -56,17 +57,10 @@ export const processMessages = functions.pubsub
             continue;
         }
         const convoData = convoDoc.data();
-        if (!convoData.participants.includes("u1")) {
-            continue;
-        }
         const lastResponseTimestamp = convoData.lastResponseTimeByUser["u1"];
         for (const [senderId, texts] of Object.entries(senders)) {
-            const messages = texts.map((text) => ({
-                text,
-                timestamp: new Date().toISOString(),
-            }));
-            // Filter out messages that were sent before the last response from currentUser
-            const filteredMessages = messages.filter((msg) => new Date(msg.timestamp) > new Date(lastResponseTimestamp));
+            const messages = texts.map(({ content, timestamp }) => ({ content, timestamp }));
+            const filteredMessages = messages.filter(msg => new Date(msg.timestamp) > new Date(lastResponseTimestamp));
             if (filteredMessages.length === 0) {
                 continue;
             }
